@@ -7,6 +7,7 @@ use App\Http\Controllers\PenilaianController;
 use App\Http\Controllers\CetakPenilaianController;
 use App\Http\Controllers\DokumenController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\MouController;
 use App\Http\Controllers\PasswordController;
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +78,9 @@ Route::middleware(['auth:user', 'ceklevel:Admin'])->group(function () {
     Route::get('berkas-dokumen/berkas/hapus/{id_dokumen}', [DokumenController::class, 'destroy']);
     Route::delete('berkas-dokumen/berkas/{nip}', [DokumenController::class, 'destroy']);
     Route::get('berkas-dokumen/preview', [DokumenController::class, 'preview']);
+
+    // app\Http\Controllers\MouController.php
+    Route::get('mou', [MouController::class, 'index']);
 });
 
 Route::middleware(['auth:pengguna', 'ceklevel:Pegawai'])->group(function () {

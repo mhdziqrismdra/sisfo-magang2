@@ -40,6 +40,7 @@ class LoginController extends Controller
 
         return back()->with('message', 'We have e-mailed your password reset link!');
     }
+    
     //Auth login berdasarkan akun di tabel pengguna atau users
     public function login(Request $request)
     {

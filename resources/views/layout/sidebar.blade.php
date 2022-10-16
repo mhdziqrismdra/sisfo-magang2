@@ -6,6 +6,7 @@
                     <img src="{{asset('assets/img/profile.jpg')}}" alt="..." class="avatar-img rounded-circle">
                 </div>
                 <div class="info">
+                    <p>{{Auth::user()}}</p>
                     <a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
                         <span>
                             @if (Str::length(Auth::guard('pengguna')->user()) > 0)
@@ -49,6 +50,18 @@
                         <i class="fa fa-ellipsis-h"></i>
                     </span>
                     <h4 class="text-section">Menu Utama</h4>
+                </li>
+                <li class="nav-item">
+                    <a href="{{url('mou')}}">
+                        <i class="far fa-file"></i>
+                        <p>Memorandum of Understanding (MOU)</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{url('berkas-dokumen')}}">
+                        <i class="far fa-file"></i>
+                        <p>Memorandum of Agreement (MOA)</p>
+                    </a>
                 </li>
                 @if (Str::length(Auth::guard('user')->user()) > 0)
                 @if (auth()->user()->level == "Admin")  
