@@ -81,6 +81,8 @@ Route::middleware(['auth:user', 'ceklevel:Admin'])->group(function () {
 
     // app\Http\Controllers\MouController.php
     Route::get('mou', [MouController::class, 'index']);
+    Route::get('mou/list', [MouController::class, 'list']);
+    Route::get('mou/create', [MouController::class, 'create']);
 });
 
 Route::middleware(['auth:pengguna', 'ceklevel:Pegawai'])->group(function () {

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<title>@yield('tab-title') - BKN</title>
 	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
-	<link rel="icon" href="{{asset('assets/img/logo_bkn.png')}}" type="image/x-icon"/>
+	<link rel="icon" href="{{asset('assets/img/logo_bkn.png')}}" type="image/x-icon" />
 
 	<!-- Fonts and icons -->
 	<script src="{{asset('assets/js/plugin/webfont/webfont.min.js')}}"></script>
@@ -23,16 +24,19 @@
 	<link rel="stylesheet" href="{{asset('assets/css/atlantis.min.css')}}">
 
 </head>
+
 <body>
 	<div class="wrapper">
 		<div class="main-header">
 			<!-- Logo Header -->
 			<div class="logo-header" data-background-color="blue">
-				
+
 				<a href="index.html" class="logo">
-					<img src="{{asset('assets/img/logo_bkn.png')}}" alt="navbar brand" class="navbar-brand ml-1" width="55px">
+					<img src="{{asset('assets/img/logo_bkn.png')}}" alt="navbar brand" class="navbar-brand ml-1"
+						width="55px">
 				</a>
-				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
+				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse"
+					data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon">
 						<i class="icon-menu"></i>
 					</span>
@@ -48,7 +52,7 @@
 
 			<!-- Navbar Header -->
 			<nav class="navbar navbar-header navbar-expand-lg" data-background-color="blue2">
-				
+
 			</nav>
 			<!-- End Navbar -->
 		</div>
@@ -57,11 +61,17 @@
 		@include('layout.sidebar')
 		<!-- End Sidebar -->
 
-        {{-- Konten --}}
+		{{-- Konten --}}
 		<div class="main-panel">
 			<div class="content">
 				@include('layout.header')
 				@yield('content')
+				{{-- untuk bagian modal --}}
+				<div class="modal fade" id="modal_form" data-backdrop="static" data-keyboard="false">
+					<div class="modal-dialog modal-lg">
+						<div id="view_modal_form"></div>
+					</div>
+				</div>
 			</div>
 			<footer class="footer">
 				<div class="container-fluid">
@@ -86,11 +96,11 @@
 					</nav>
 					<div class="copyright">
 						2021, made with <i class="fa fa-heart heart text-danger"></i> by Muhammad Ziqri Samudra
-					</div>				
+					</div>
 				</div>
 			</footer>
 		</div>
-        {{-- Konten --}}
+		{{-- Konten --}}
 	</div>
 	<!--   Core JS Files   -->
 	<script src="{{asset('assets/js/core/jquery.3.2.1.min.js')}}"></script>
@@ -128,9 +138,13 @@
 	<script src="{{asset('assets/js/atlantis.min.js')}}"></script>
 
 	<!-- Atlantis DEMO methods, don't include it in your project! -->
-	<script src="{{asset('assets/js/setting-demo.js')}}"></script>
+	{{-- <script src="{{asset('assets/js/setting-demo.js')}}"></script> --}}
 	<script src="{{asset('assets/js/demo.js')}}"></script>
+	{{-- load custom js --}}
+	<script src="{{asset('assets/js/main.js')}}"></script>
 	@stack('page-script')
+	@yield('script-js')
 
 </body>
+
 </html>
