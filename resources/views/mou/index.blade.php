@@ -149,52 +149,50 @@
                 ],
                 ajax: {
                     url: "{{ url('mou/list') }}",
-                    type: "POST",
+                    type: "GET",
                     dataType: "JSON",
                 },
                 columns: [{
-                        data: "kelas_icu_id",
+                        data: "id",
                         orderable: false,
                         searchable: false
                     }, {
-                        data: "kelas_icu_nama",
+                        data: 'no',
+                        orderable: false,
+                        searchable: false
                     }, {
                         data: "kelas_jenjang"
                     },
                     {
-                        data: "kelas_icu_status",
-                        orderable: false,
-                        searchable: false
+                        data: "tanggal_kerja_sama",
                     },
                     {
-                        data: "kelas_icu_id",
-                        orderable: false,
-                        searchable: false
-                    }
-                ],
-                columnDefs: [{
-                        targets: 3,
-                        render: function(data, type, row, meta) {
-                            if (data == 'active') {
-                                result = `<span class="btn btn-success btn-sm">Active</span>`;
-                            } else {
-                                result = `<span class="btn btn-danger btn-sm">Non Active</span>`;
-                            }
-                            return result;
-                        }
+                        data: "nama_lembaga_mitra",
                     },
                     {
-                        targets: 4,
-                        render: function(data, type, row, meta) {
-                            result = `<button title="Edit" type="button" onclick="btn_update('` + data + `')" class="btn btn-warning btn-sm"><i class="fa fa-fw fa-edit"></i></button>
-                        <button title="Delete" type="button" onclick="btn_delete('` + data +
-                                `')" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i></button>`;
-                            return result;
-                        }
+                        data: "negara_id",
+                    },
+                    {
+                        data: "provinsi_id",
+                    },
+                    {
+                        data: "kecamata_id",
+                    },
+                    {
+                        data: "kelurahan_id",
+                    },
+                    {
+                        data: "alamat",
+                    },
+                    {
+                        data: "durasi_kerja_sama",
+                    },
+                    {
+                        data: "status",
                     }
-                ],
+                ],                 
                 order: [
-                    [1, 'asc']
+                    [2, 'asc']
                 ],
                 rowCallback: function(row, data, iDisplayIndex) {
                     var info = this.fnPagingInfo();
