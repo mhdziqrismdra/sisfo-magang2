@@ -11,3 +11,48 @@ function api_data_table() {
       };
     };
   }
+
+  function swalLoading() {
+    Swal.fire({
+      title: "UNIVERSITAS ISLAM RIAU",
+      html: "Mohon Tunggu...",
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+  }
+  
+  function messegeSuccess(messege) {
+    Swal.fire({
+      title: "UNIVERSITAS ISLAM RIAU",
+      icon: "success",
+      html: messege,
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      timer: 2000,
+    });
+  }
+  
+  function messegeWarning(messege) {
+    Swal.fire({
+      title: "UNIVERSITAS ISLAM RIAU",
+      icon: "warning",
+      html: messege,
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+    });
+  }
+  
+  function messegeError(messege) {
+    Swal.fire({
+      title: "UNIVERSITAS ISLAM RIAU",
+      icon: "error",
+      html: messege,
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+    });
+  }
+  
