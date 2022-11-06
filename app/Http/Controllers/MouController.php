@@ -107,6 +107,18 @@ class MouController extends Controller
             );
         }
 
+        // check uploaded files
+        if ($request->file('dokumen')) {
+
+            $file = $request->file('dokumen');
+            $filename = "Doc_MOU_" . time();
+            $extension = $file->getClientOriginalExtension();
+            $location = 'uploads/mou/';
+            // Upload file
+            $file->move($location, $filename);
+            $dataInsert['dokumen'] = $filename . "." . $extension;
+        }
+
         // if validation success
         if ($request->negara_id == '102') {
             $dataInsert['provinsi_id'] = $request->provinsi_id;
@@ -198,9 +210,21 @@ class MouController extends Controller
             return response()->json(
                 [
                     'status' => false,
-                    'message' => $validator->errors()
+                    'message' => $validator->errors()->all(),
                 ]
             );
+        }
+
+        // check uploaded files
+        if ($request->file('dokumen')) {
+
+            $file = $request->file('dokumen');
+            $filename = "Doc_MOU_" . time();
+            $extension = $file->getClientOriginalExtension();
+            $location = 'uploads/mou/';
+            // Upload file
+            $file->move($location, $filename);
+            $dataUpdate['dokumen'] = $filename . "." . $extension;
         }
 
         // if validation success

@@ -172,9 +172,12 @@
                 success: function(respon) {
                     setCSRF(respon.token);
                     if (respon.status) {
+                        messegeSuccess(respon.message);
                         $('#myDatatables').DataTable().ajax.reload(null, false);
                         $('#modal_form').modal('hide');
-                    } else {}
+                    } else {
+                        messegeWarning(respon.message);
+                    }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     alert("Code Status : " + xhr.status + "\nMessege Error :" +
