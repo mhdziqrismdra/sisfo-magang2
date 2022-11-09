@@ -9,6 +9,8 @@ use App\Http\Controllers\DokumenController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MouController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\TestController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,6 +43,8 @@ Route::middleware(['auth:user,pengguna', 'ceklevel:Admin,Pegawai'])->group(funct
         return view('dashboard');
     });
 });
+
+Route::get('test', [TestController::class, 'index']);
 
 Route::middleware(['auth:user', 'ceklevel:Admin'])->group(function () {
     Route::get('akun-pegawai', [AkunController::class, 'index']);

@@ -25,7 +25,7 @@ class MouController extends Controller
 
     public function list()
     {
-        $sqlBuilder = Mou::select(['tbl_mou.id as no', 'tbl_mou.id', 'tanggal_kerja_sama', 'nama_lembaga_mitra', 'master_negara.nama_negara', 'master_provinsi.province_name', 'master_kota_kabupaten.kota_kabupaten_nama', 'master_kecamatan.kecamatan_nama', 'master_kelurahan.kelurahan_nama', 'alamat', 'durasi_kerja_sama', DB::raw('DATE_SUB(tbl_mou.tanggal_kerja_sama, INTERVAL 5 YEAR) as tanggal_akhir_kerja_sama'), 'status'])
+        $sqlBuilder = Mou::select(['tbl_mou.id as no', 'tbl_mou.id', 'tanggal_kerja_sama', 'nama_lembaga_mitra', 'master_negara.nama_negara', 'master_provinsi.province_name', 'master_kota_kabupaten.kota_kabupaten_nama', 'master_kecamatan.kecamatan_nama', 'master_kelurahan.kelurahan_nama', 'alamat', 'durasi_kerja_sama', 'tanggal_akhir_kerja_sama', 'status'])
             ->join('master_negara', 'master_negara.id', 'tbl_mou.negara_id')
             ->leftJoin('master_provinsi', 'master_provinsi.master_provinsi_id', 'tbl_mou.provinsi_id')
             ->leftJoin('master_kota_kabupaten', 'master_kota_kabupaten.master_kota_kabupaten_id', 'tbl_mou.kota_kabupaten_id')
@@ -56,13 +56,13 @@ class MouController extends Controller
         $data['kecamata_id'] = "";
         $data['kelurahan_id'] = "";
         $data['alamat'] = "";
-        $data['durasi_kerja_sama'] = "";
+        $data['durasi_kerja_sama'] = "";        
         $data['status'] = "";
         $data['negara_result'] = Negara::all();
         $data['provinsi_result'] = Provinsi::orderBy('province_name')->get();
         $data['kota_kabupaten_result'] = $oKotaKabupaten->getKotaKabupatenByProvinsi()->get();
         $data['kecamatan_result'] = $oKecamatan->getKecamatanByKabupaten()->get();
-        $data['keluarahan_result'] = $oKelurahan->getkelurahanByKecamatan()->get();
+        $data['kelurahan_result'] = $oKelurahan->getkelurahanByKecamatan()->get();
 
         $respon['status'] = true;
 
@@ -131,6 +131,7 @@ class MouController extends Controller
         $dataInsert['negara_id'] = $request->negara_id;
         $dataInsert['alamat'] = $request->alamat;
         $dataInsert['durasi_kerja_sama'] = $request->durasi_kerja_sama;
+        $dataInsert['tanggal_akhir_kerja_sama']= date('Y-m-d', strtotime($request->tanggal_kerja_sama. ' + '.$request->durasi_kerja_sama.' years'));
         $dataInsert['status'] = 1;
 
         Mou::create($dataInsert);
@@ -166,14 +167,13 @@ class MouController extends Controller
         $data['status'] = $mowRow->status;
         $data['negara_result'] = Negara::all();
         $data['provinsi_result'] = Provinsi::orderBy('province_name')->get();
-        $data['kota_kabupaten_result'] = $oKotaKabupaten->getKotaKabupatenByProvinsi($mowRow->kota_kabupaten_id)->get();
-        $data['kecamatan_result'] = $oKecamatan->getKecamatanByKabupaten($mowRow->kecamata_id)->get();
-        $data['keluarahan_result'] = $oKelurahan->getkelurahanByKecamatan($mowRow->kelurahan_id)->get();
+        $data['kota_kabupaten_result'] = $oKotaKabupaten->getKotaKabupatenByProvinsi($mowRow->provinsi_id)->get();
+        $data['kecamatan_result'] = $oKecamatan->getKecamatanByKabupaten($mowRow->kota_kabupaten_id)->get();
+        $data['kelurahan_result'] = $oKelurahan->getkelurahanByKecamatan($mowRow->kecamata_id)->get();
 
 
         $respon['status'] = true;
         $respon['token'] = csrf_token();
-        $respon['mowRow'] = $mowRow;
         $respon['view_modal_form'] = view('mou.form', $data)->render();
         return response()->json($respon);
     }
@@ -239,6 +239,7 @@ class MouController extends Controller
         $dataUpdate['negara_id'] = $request->negara_id;
         $dataUpdate['alamat'] = $request->alamat;
         $dataUpdate['durasi_kerja_sama'] = $request->durasi_kerja_sama;
+        $dataUpdate['tanggal_akhir_kerja_sama']= date('Y-m-d', strtotime($request->tanggal_kerja_sama. ' + '.$request->durasi_kerja_sama.' years'));
         $dataUpdate['status'] = $request->status;
 
         Mou::where(['id' => $request->id])->update($dataUpdate);

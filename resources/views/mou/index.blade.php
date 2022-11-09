@@ -173,7 +173,7 @@
                                             <i class="far fa-trash-alt"></i>
                                         </button>
                                     </div>`;
-                            }
+                        }
                     },
                     {
                         data: "tanggal_kerja_sama",
@@ -249,6 +249,12 @@
 
         function btnDelete(params) {
             Edit
+        }
+
+        function name(params) {
+            let date_now = new Date();
+            let date_warning = new Date(row['tgl_warning']);
+            let date_actual = new Date(data);
         }
     </script>
 @endsection

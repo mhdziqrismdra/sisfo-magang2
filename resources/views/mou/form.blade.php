@@ -72,7 +72,7 @@
                         <label for="kelurahan_id">Kelurahan</label>
                         <select class="form-control" id="kelurahan_id" name="kelurahan_id">
                             <option value="">--Pilih Kelurahan--</option>
-                            @foreach ($keluarahan_result as $item)
+                            @foreach ($kelurahan_result as $item)
                                 <option value="{{ $item->master_kelurahan_id }}"
                                     {{ $kelurahan_id == $item->master_kelurahan_id ? 'selected' : '' }}>
                                     {{ $item->kelurahan_nama }}</option>
@@ -274,7 +274,7 @@
                     html += `<option value="">--Pilih Kelurahan--</option>`;
                     for (i = 0; i < response.kelurahan_result.length; i++) {
                         html +=
-                            `<option value="${response.kelurahan_result[i].kelurahan_id}">${response.kelurahan_result[i].kelurahan_nama}</option>`;
+                            `<option value="${response.kelurahan_result[i].master_kelurahan_id}">${response.kelurahan_result[i].kelurahan_nama}</option>`;
                     }
                 } else {
                     html = `<option value="">--Pilih Kelurahan--</option>`;
