@@ -11,11 +11,23 @@ class Mou extends Model
     use HasFactory;
     protected $table = 'tbl_mou';
     protected $primaryKey = 'id';
-    protected $fillable = ['tanggal_kerja_sama', 'nama_lembaga_mitra', 'negara_id', 'provinsi_id', 'kota_kabupaten_id', 'kecamata_id', 'kelurahan_id', 'alamat', 'durasi_kerja_sama','tanggal_akhir_kerja_sama', 'status'];
+    protected $fillable = ['tanggal_kerja_sama', 'nama_lembaga_mitra', 'negara_id', 'provinsi_id', 'kota_kabupaten_id', 'kecamata_id', 'kelurahan_id', 'alamat', 'durasi_kerja_sama', 'tanggal_akhir_kerja_sama', 'status'];
 
     public function insertMOU($data = array())
     {
         DB::table('tbl_mou')->insert($data);
+    }
+
+    public function getMouById($id = "")
+    {
+        $query = DB::table('tbl_mou')
+            ->join('master_negara', 'master_negara.id', '=', 'tbl_mou.negara_id')
+            ->leftJoin('master_provinsi', 'master_provinsi.master_provinsi_id', '=', 'tbl_mou.provinsi_id')
+            ->leftJoin('master_kota_kabupaten', 'master_kota_kabupaten.master_kota_kabupaten_id', '=', 'tbl_mou.kota_kabupaten_id')
+            ->leftJoin('master_kecamatan', 'master_kecamatan.master_kecamatan_id', '=', 'tbl_mou.kecamata_id')
+            ->leftJoin('master_kelurahan', 'master_kelurahan.master_kelurahan_id', '=', 'tbl_mou.kelurahan_id')
+            ->where("tbl_mou.id", "=", $id);
+        return $query;
     }
 
     // public function getMOU()

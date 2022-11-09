@@ -30,7 +30,7 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             {{-- tabel MOU --}}
-                            <table id="myDatatables" class="display table table-striped table-hover" cellspacing="0"
+                            <table id="myDatatables" class="display table table-striped table-hover text-nowrap" cellspacing="0"
                                 width="100%">
                                 <thead>
                                     <tr>
@@ -63,6 +63,10 @@
 
 @section('script-js')
     <script>
+        setInterval(function() {
+            $(".berkedip").toggle();
+        }, 300);
+
         $(document).ready(function() {
             dataTables();
         });
@@ -108,6 +112,7 @@
                 responsive: true,
                 lengthChange: true,
                 autoWidth: false,
+                scrollX: true,
                 lengthMenu: [
                     [10, 25, 50, 100, 200, -1],
                     [10, 25, 50, 100, 200, "All"]
@@ -166,6 +171,9 @@
                         searchable: false,
                         render: function(data, type, row, meta) {
                             return `<div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="button" onclick="btnDetail('${data}')" title="Detail" class="btn btn-info btn-sm">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
                                         <button type="button" onclick="btnEdit('${data}')" title="Edit" class="btn btn-warning btn-sm">
                                             <i class="far fa-edit"></i>
                                         </button>
@@ -178,6 +186,9 @@
                     {
                         data: "tanggal_kerja_sama",
                         searchable: false,
+                        render: function(data, type, row, meta) {
+                            return getFormattedDate(data);
+                        }
                     },
                     {
                         data: "nama_lembaga_mitra",
@@ -206,9 +217,28 @@
                     {
                         data: "tanggal_akhir_kerja_sama",
                         searchable: false,
+                        render: function(data, type, row, meta) {
+                            return getFormattedDate(data);
+                        }
                     }, {
                         data: "status",
                         searchable: false,
+                        orderable: false,
+                        render: function(data, type, row, meta) {
+                            let date_sekarang = new Date();
+                            let tanggal_akhir_kerja_sama = new Date(row['tanggal_akhir_kerja_sama']);
+                            var taggal_6_bulan = addMonths(date_sekarang, 6)
+                            let result = ``;
+                            if (tanggal_akhir_kerja_sama > date_sekarang && tanggal_akhir_kerja_sama <
+                                new Date(taggal_6_bulan)) {                                
+                                result = "<div class='berkedip'>Akan Berakhir</div>";
+                            } else if (tanggal_akhir_kerja_sama < date_sekarang) {
+                                result = "Berakhir";
+                            } else {
+                                result = "Aktif";
+                            }
+                            return result;
+                        }
                     }
                 ],
                 order: [
@@ -223,6 +253,29 @@
                 }
             });
         }
+
+        function getFormattedDate(date) {
+            var dt = new Date(date);
+            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            var mmddyyyy = dt.getDate() + ' ' + months[dt.getMonth()] + ' ' + dt.getFullYear();
+            return mmddyyyy;
+        }
+
+        function addMonths(isoDate, numberMonths) {
+            var dateObject = new Date(isoDate),
+                day = dateObject.getDate(); // returns day of the month number
+
+            // avoid date calculation errors
+            dateObject.setHours(20);
+
+            // add months and set date to last day of the correct month
+            dateObject.setMonth(dateObject.getMonth() + numberMonths + 1, 0);
+
+            // set day number to min of either the original one or last day of month
+            dateObject.setDate(Math.min(day, dateObject.getDate()));
+
+            return dateObject.toISOString().split('T')[0];
+        };
 
         function btnEdit(id) {
             swalLoading();
@@ -247,8 +300,31 @@
             });
         }
 
+        function btnDetail(id) {
+            swalLoading();
+            getCSRF();
+            $.ajax({
+                url: "{{ url('mou/detail') }}",
+                data: {
+                    mou_id: id,
+                },
+                type: "PUT",
+                dataType: "JSON",
+                success: function(respon) {
+                    Swal.close();
+                    setCSRF(respon.token);
+                    if (respon.status) {
+                        $('#view_modal_form').html(respon.view_modal_form);
+                        $('#modal_form').modal('show');
+                    } else {
+                        alert("error");
+                    }
+                },
+            });
+        }
+
         function btnDelete(params) {
-            Edit
+            messegeWarning("Belum Dibuat");
         }
 
         function name(params) {

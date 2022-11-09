@@ -90,11 +90,11 @@ Route::middleware(['auth:user', 'ceklevel:Admin'])->group(function () {
     Route::post('mou/create/action', [MouController::class, 'createAction']);
     Route::put('mou/update', [MouController::class, 'update']);
     Route::post('mou/update/action', [MouController::class, 'updateAction']);
+    Route::put('mou/detail', [MouController::class, 'detail']);
     Route::get('mou/provinsi', [MouController::class, 'provinsi']);
     Route::get('mou/kabupaten', [MouController::class, 'kotaKabupaten']);
     Route::get('mou/kecamatan', [MouController::class, 'kecamatan']);
     Route::get('mou/kelurahan', [MouController::class, 'kelurahan']);
-
 });
 
 Route::middleware(['auth:pengguna', 'ceklevel:Pegawai'])->group(function () {

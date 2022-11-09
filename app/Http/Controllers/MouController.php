@@ -8,6 +8,9 @@ use App\Models\KotaKabupaten;
 use App\Models\Mou;
 use App\Models\Negara;
 use App\Models\Provinsi;
+use Carbon\Carbon;
+use DateInterval;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -56,7 +59,7 @@ class MouController extends Controller
         $data['kecamata_id'] = "";
         $data['kelurahan_id'] = "";
         $data['alamat'] = "";
-        $data['durasi_kerja_sama'] = "";        
+        $data['durasi_kerja_sama'] = "";
         $data['status'] = "";
         $data['negara_result'] = Negara::all();
         $data['provinsi_result'] = Provinsi::orderBy('province_name')->get();
@@ -131,7 +134,7 @@ class MouController extends Controller
         $dataInsert['negara_id'] = $request->negara_id;
         $dataInsert['alamat'] = $request->alamat;
         $dataInsert['durasi_kerja_sama'] = $request->durasi_kerja_sama;
-        $dataInsert['tanggal_akhir_kerja_sama']= date('Y-m-d', strtotime($request->tanggal_kerja_sama. ' + '.$request->durasi_kerja_sama.' years'));
+        $dataInsert['tanggal_akhir_kerja_sama'] = date('Y-m-d', strtotime($request->tanggal_kerja_sama . ' + ' . $request->durasi_kerja_sama . ' years'));
         $dataInsert['status'] = 1;
 
         Mou::create($dataInsert);
@@ -239,7 +242,7 @@ class MouController extends Controller
         $dataUpdate['negara_id'] = $request->negara_id;
         $dataUpdate['alamat'] = $request->alamat;
         $dataUpdate['durasi_kerja_sama'] = $request->durasi_kerja_sama;
-        $dataUpdate['tanggal_akhir_kerja_sama']= date('Y-m-d', strtotime($request->tanggal_kerja_sama. ' + '.$request->durasi_kerja_sama.' years'));
+        $dataUpdate['tanggal_akhir_kerja_sama'] = date('Y-m-d', strtotime($request->tanggal_kerja_sama . ' + ' . $request->durasi_kerja_sama . ' years'));
         $dataUpdate['status'] = $request->status;
 
         Mou::where(['id' => $request->id])->update($dataUpdate);
@@ -248,6 +251,30 @@ class MouController extends Controller
         $respon['token'] = csrf_token();
         $respon['message'] = "Berhasil update data MOU";
 
+        return response()->json($respon);
+    }
+
+    public function detail(Request $request)
+    {
+        $oKotaKabupaten = new KotaKabupaten();
+        $oKecamatan = new Kecamatan();
+        $oKelurahan = new Kelurahan();
+        $oMOU = new MOU();
+
+        $id = $request->mou_id;
+        $mouRow = $oMOU->getMouById($id)->first();
+        // print_r($mouRow);
+
+        $datetime = new \DateTime();
+        $datetime->add(new DateInterval('P6M'));
+
+        $data['title'] = "Detail MOU - " . $mouRow->nama_lembaga_mitra;
+        $data['mouRow'] = $mouRow;
+        $data['tanggal_6_bulan'] = $datetime->format('Y-m-d');
+
+        $respon['status'] = true;
+        $respon['token'] = csrf_token();
+        $respon['view_modal_form'] = view('mou.detail', $data)->render();
         return response()->json($respon);
     }
 
