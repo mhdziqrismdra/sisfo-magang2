@@ -77,7 +77,11 @@
                     <td>:</td>
                     <td>{{ $tanggal_6_bulan }}</td>
                 </tr>
+                @php
+                    $total = 5 + 6;
+                @endphp
 
+                {{ $total }}
 
             </table>
             <div class="card-action">

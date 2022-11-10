@@ -11,7 +11,7 @@ class Mou extends Model
     use HasFactory;
     protected $table = 'tbl_mou';
     protected $primaryKey = 'id';
-    protected $fillable = ['tanggal_kerja_sama', 'nama_lembaga_mitra', 'negara_id', 'provinsi_id', 'kota_kabupaten_id', 'kecamata_id', 'kelurahan_id', 'alamat', 'durasi_kerja_sama', 'tanggal_akhir_kerja_sama', 'status'];
+    protected $fillable = ['tanggal_kerja_sama', 'nama_lembaga_mitra', 'negara_id', 'provinsi_id', 'kota_kabupaten_id', 'kecamata_id', 'kelurahan_id', 'alamat', 'durasi_kerja_sama', 'tanggal_akhir_kerja_sama', 'status','id_parent'];
 
     public function insertMOU($data = array())
     {

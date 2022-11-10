@@ -14,6 +14,16 @@
                 </div>
             </div>
             <div class="card-body">
+                
+                @if (isset($is_perpanjang))
+                    <div class="card card-dark bg-info-gradient">
+                        <div class="card-body bubble-shadow">
+                            <h3><i class="fas fa-info"></i> Informasi</h3>
+                            <p>Silahkan perbaharui data untuk perpanjangan MOU</p>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="form-group">
                     <label for="tanggal_kerja_sama">Tanggal</label>
                     <input type="date" class="form-control" id="tanggal_kerja_sama" name="tanggal_kerja_sama"
@@ -88,7 +98,7 @@
                 <div class="form-group">
                     <label for="durasi_kerja_sama">Durasi</label>
                     <input type="number" class="form-control" id="durasi_kerja_sama" name="durasi_kerja_sama"
-                    value="{{ $durasi_kerja_sama }}"  placeholder="Masukan Durasi ...">
+                        value="{{ $durasi_kerja_sama }}" placeholder="Masukan Durasi ...">
                 </div>
                 <div class="form-group">
                     <label for="dokumen">Dokumen</label>
@@ -99,13 +109,14 @@
                     <label for="status">Status</label>
                     <select class="form-control" id="status" name="status">
                         <option value="">--Pilih Status--</option>
-                        <option value="1" {{ $status == "1" ? 'selected' : '' }}>Aktif</option>
-                        <option value="0" {{ $status == "0" ? 'selected' : '' }}>Tidak Aktif</option>
+                        <option value="1" {{ $status == '1' ? 'selected' : '' }}>Aktif</option>
+                        <option value="0" {{ $status == '0' ? 'selected' : '' }}>Tidak Aktif</option>
                     </select>
                 </div>
             </div>
             <div class="card-action">
                 <input type="hidden" name="id" id="id" value="<?= $id ?>">
+                <input type="hidden" name="id_parent" id="id_parent" value="<?= $id_parent ?>">
                 <button class="btn btn-danger" type="button" class="close" data-dismiss="modal"
                     aria-label="Close"><i class="fas fa-times"></i> Cancel</button>
                 <button class="btn btn-success pull-right" id="submit"><i class="far fa-save"></i> Submit</button>

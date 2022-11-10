@@ -171,6 +171,9 @@
                         searchable: false,
                         render: function(data, type, row, meta) {
                             return `<div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="button" onclick="btnPerpanjang('${data}')" title="Perpanjang" class="btn btn-success btn-sm">
+                                            <i class="fas fa-calendar-plus"></i>
+                                        </button>
                                         <button type="button" onclick="btnDetail('${data}')" title="Detail" class="btn btn-info btn-sm">
                                             <i class="fas fa-eye"></i>
                                         </button>
@@ -276,6 +279,29 @@
 
             return dateObject.toISOString().split('T')[0];
         };
+
+        function btnPerpanjang(id) {
+            swalLoading();
+            getCSRF();
+            $.ajax({
+                url: "{{ url('mou/perpanjang') }}",
+                data: {
+                    mou_id: id,
+                },
+                type: "PUT",
+                dataType: "JSON",
+                success: function(respon) {
+                    Swal.close();
+                    setCSRF(respon.token);
+                    if (respon.status) {
+                        $('#view_modal_form').html(respon.view_modal_form);
+                        $('#modal_form').modal('show');
+                    } else {
+                        alert("error");
+                    }
+                },
+            });
+        }
 
         function btnEdit(id) {
             swalLoading();
