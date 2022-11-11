@@ -21,20 +21,34 @@ class MouController extends Controller
 {
     public function index()
     {
-        return view('mou.index');
+        $data['tahunKerjaSama'] = Mou::selectRaw('YEAR(tanggal_kerja_sama) as tahun')->orderBy('tanggal_kerja_sama')->get();
+        return view('mou.index', $data);
         // $oMou = new Mou();
         // print_r($oMou->getMOU()->get());
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        $sqlBuilder = Mou::select(['tbl_mou.id as no', 'tbl_mou.id', 'tanggal_kerja_sama', 'nama_lembaga_mitra', 'master_negara.nama_negara', 'master_provinsi.province_name', 'master_kota_kabupaten.kota_kabupaten_nama', 'master_kecamatan.kecamatan_nama', 'master_kelurahan.kelurahan_nama', 'alamat', 'durasi_kerja_sama', 'tanggal_akhir_kerja_sama', 'status'])
+        $tahuKerjaSama = $request->tahuKerjaSama;
+        $dateMinus5Year = date('Y-m-d', strtotime(date('Y-m-d') . ' - 5 years')); // tanggal kurang dari 5 tahun sekarang
+        $datePlus5Year = date('Y-m-d', strtotime(date('Y-m-d') . ' + 5 years')); // tanggal lebih dari 5 tahun sekarang
+        $sqlBuilder = Mou::select(['tbl_mou.id as no', 'tbl_mou.id', 'tanggal_kerja_sama', 'nama_lembaga_mitra', 'periode', 'master_negara.nama_negara', 'master_provinsi.province_name', 'master_kota_kabupaten.kota_kabupaten_nama', 'master_kecamatan.kecamatan_nama', 'master_kelurahan.kelurahan_nama', 'alamat', 'durasi_kerja_sama', 'tanggal_akhir_kerja_sama', 'status'])
             ->join('master_negara', 'master_negara.id', 'tbl_mou.negara_id')
             ->leftJoin('master_provinsi', 'master_provinsi.master_provinsi_id', 'tbl_mou.provinsi_id')
             ->leftJoin('master_kota_kabupaten', 'master_kota_kabupaten.master_kota_kabupaten_id', 'tbl_mou.kota_kabupaten_id')
             ->leftJoin('master_kecamatan', 'master_kecamatan.master_kecamatan_id', 'tbl_mou.kecamata_id')
-            ->leftJoin('master_kelurahan', 'master_kelurahan.master_kelurahan_id', 'tbl_mou.kelurahan_id')
-            ->where('status', '1');
+            ->leftJoin('master_kelurahan', 'master_kelurahan.master_kelurahan_id', 'tbl_mou.kelurahan_id');
+
+        if ($tahuKerjaSama != "") {
+            if ($tahuKerjaSama == ">5") {
+                $sqlBuilder->whereDate('tanggal_kerja_sama', '>', $datePlus5Year);
+            } else {
+                $sqlBuilder->whereYear('tanggal_kerja_sama', '=', $tahuKerjaSama);
+            }
+        } else {
+            $sqlBuilder->whereDate('tanggal_kerja_sama', '>', $dateMinus5Year);
+        }
+        // ->where('status', '=', '1');
 
 
         $oMou = new Mou();
@@ -53,7 +67,7 @@ class MouController extends Controller
         $data['title'] = "Tambah MOU";
         $data['action'] = 'mou/create/action';
         $data['id'] = "";
-        $data['id_parent'] = "";
+        $data['periode'] = "";
         $data['tanggal_kerja_sama'] = "";
         $data['nama_lembaga_mitra'] = "";
         $data['negara_id'] = "";
@@ -108,7 +122,8 @@ class MouController extends Controller
             return response()->json(
                 [
                     'status' => false,
-                    'message' => $validator->errors()
+                    'token' => csrf_token(),
+                    'message' => $validator->errors()->all()
                 ]
             );
         }
@@ -132,6 +147,7 @@ class MouController extends Controller
             $dataInsert['kecamata_id'] = $request->kecamata_id;
             $dataInsert['kelurahan_id'] = $request->kelurahan_id;
         }
+        $dataInsert['periode'] = 1;
         $dataInsert['tanggal_kerja_sama'] = $request->tanggal_kerja_sama;
         $dataInsert['nama_lembaga_mitra'] = $request->nama_lembaga_mitra;
         $dataInsert['negara_id'] = $request->negara_id;
@@ -140,7 +156,7 @@ class MouController extends Controller
         $dataInsert['tanggal_akhir_kerja_sama'] = date('Y-m-d', strtotime($request->tanggal_kerja_sama . ' + ' . $request->durasi_kerja_sama . ' years'));
         $dataInsert['status'] = 1;
 
-        $dataGet = Mou::create($dataInsert);       
+        $dataGet = Mou::create($dataInsert);
 
         $respon['status'] = true;
         $respon['token'] = csrf_token();
@@ -161,7 +177,7 @@ class MouController extends Controller
         $data['title'] = "Update MOU";
         $data['action'] = 'mou/update/action';
         $data['id'] = $id;
-        $data['id_parent'] = $mowRow->id_parent;
+        $data['periode'] = $mowRow->periode;
         $data['tanggal_kerja_sama'] = $mowRow->tanggal_kerja_sama;
         $data['nama_lembaga_mitra'] = $mowRow->nama_lembaga_mitra;
         $data['negara_id'] = $mowRow->negara_id;
@@ -217,6 +233,7 @@ class MouController extends Controller
             return response()->json(
                 [
                     'status' => false,
+                    'token' => csrf_token(),
                     'message' => $validator->errors()->all(),
                 ]
             );
@@ -271,8 +288,8 @@ class MouController extends Controller
         $data['action'] = 'mou/perpanjang/action';
         $data['is_perpanjang'] = true; // untuk menandakan ini form perpanjang
         $data['id'] = $id;
-        $data['id_parent'] = $mowRow->id_parent;
-        $data['tanggal_kerja_sama'] = $mowRow->tanggal_kerja_sama;
+        $data['periode'] = $mowRow->periode;
+        $data['tanggal_kerja_sama'] = "";
         $data['nama_lembaga_mitra'] = $mowRow->nama_lembaga_mitra;
         $data['negara_id'] = $mowRow->negara_id;
         $data['provinsi_id'] = $mowRow->provinsi_id;
@@ -327,7 +344,8 @@ class MouController extends Controller
             return response()->json(
                 [
                     'status' => false,
-                    'message' => $validator->errors()
+                    'token' => csrf_token(),
+                    'message' => $validator->errors()->all()
                 ]
             );
         }
@@ -362,13 +380,8 @@ class MouController extends Controller
         $dataInsert =  Mou::create($dataInsert);
 
         // untuk update id_parent
-        if ($request->id_parent == "") {
-            $dataUpdate1['id_parent'] = $request->id;
-            Mou::where(['id' => $dataInsert->id])->update($dataUpdate1);
-        }else{
-            $dataUpdate1['id_parent'] = $request->id_parent;
-            Mou::where(['id' => $dataInsert->id])->update($dataUpdate1);
-        }
+        $dataUpdate1['periode'] = $request->periode + 1;
+        Mou::where(['id' => $dataInsert->id])->update($dataUpdate1);
 
         // untuk update status MOU lama
         $dataUpdate['status'] = '0';

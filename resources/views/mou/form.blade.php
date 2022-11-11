@@ -116,7 +116,7 @@
             </div>
             <div class="card-action">
                 <input type="hidden" name="id" id="id" value="<?= $id ?>">
-                <input type="hidden" name="id_parent" id="id_parent" value="<?= $id_parent ?>">
+                <input type="hidden" name="periode" id="periode" value="<?= $periode ?>">
                 <button class="btn btn-danger" type="button" class="close" data-dismiss="modal"
                     aria-label="Close"><i class="fas fa-times"></i> Cancel</button>
                 <button class="btn btn-success pull-right" id="submit"><i class="far fa-save"></i> Submit</button>

@@ -28,16 +28,32 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="tahunKerjaSama">Tahun Kerja Sama</label>
+                                    <select class="form-control" name="tahunKerjaSama" id="tahunKerjaSama">
+                                        <option value="">Pilih Tahun Kerja Sama</option>
+                                        @foreach ($tahunKerjaSama as $item)
+                                            <option value="{{ $item->tahun }}">{{ $item->tahun }}</option>
+                                        @endforeach
+                                        <option value=">5">> 5 tahun</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="table-responsive">
                             {{-- tabel MOU --}}
-                            <table id="myDatatables" class="display table table-striped table-hover text-nowrap" cellspacing="0"
-                                width="100%">
+                            <table id="myDatatables" class="display table table-striped table-hover text-nowrap"
+                                cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
                                         <th>No</th>
                                         <th>Action</th>
                                         <th>Tanggal</th>
                                         <th>Nama Lembaga</th>
+                                        <th>Periode</th>
                                         <th>Negara</th>
                                         <th>Provinsi</th>
                                         <th>Kabupaten/Kota</th>
@@ -71,6 +87,19 @@
             dataTables();
         });
 
+        $(function() {
+            // fungsi untuk cek negara indonesia atau tidak
+            $("#tahunKerjaSama").change(function() {
+                let tahunKerjaSama = $("#tahunKerjaSama").val();
+                if (tahunKerjaSama == "") {
+                    messegeWarning("Pilih Tahun Kerja Sama");
+                    $("#tahunKerjaSama").focus();
+                    return false;
+                }
+                dataTables(tahunKerjaSama);
+            });
+        });
+
         function btnTambah() {
             $.ajax({
                 url: "{{ url('mou/create') }}",
@@ -87,7 +116,7 @@
             });
         }
 
-        function dataTables() {
+        function dataTables(tahunKerjaSama = "") {
             api_data_table();
             $("#myDatatables").DataTable({
                 initComplete: function() {
@@ -155,6 +184,9 @@
                 ],
                 ajax: {
                     url: "{{ url('mou/list') }}",
+                    data: {
+                        tahuKerjaSama : tahunKerjaSama
+                    },
                     type: "GET",
                     dataType: "JSON",
                 },
@@ -170,10 +202,16 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row, meta) {
+                            let date_sekarang = new Date();
+                            let tanggal_akhir_kerja_sama = new Date(row['tanggal_akhir_kerja_sama']);
+                            let btnPerpanjang = ``;
+                            if (tanggal_akhir_kerja_sama < date_sekarang) {
+                                btnPerpanjang = `<button type="button" onclick="btnPerpanjang('${data}')" title="Perpanjang" class="btn btn-success btn-sm">
+                                                    <i class="fas fa-calendar-plus"></i>
+                                                </button>`;
+                            }
                             return `<div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" onclick="btnPerpanjang('${data}')" title="Perpanjang" class="btn btn-success btn-sm">
-                                            <i class="fas fa-calendar-plus"></i>
-                                        </button>
+                                        ${btnPerpanjang}
                                         <button type="button" onclick="btnDetail('${data}')" title="Detail" class="btn btn-info btn-sm">
                                             <i class="fas fa-eye"></i>
                                         </button>
@@ -197,6 +235,8 @@
                         data: "nama_lembaga_mitra",
                     },
                     {
+                        data: "periode",
+                    }, {
                         data: "nama_negara",
                     },
                     {
@@ -233,7 +273,7 @@
                             var taggal_6_bulan = addMonths(date_sekarang, 6)
                             let result = ``;
                             if (tanggal_akhir_kerja_sama > date_sekarang && tanggal_akhir_kerja_sama <
-                                new Date(taggal_6_bulan)) {                                
+                                new Date(taggal_6_bulan)) {
                                 result = "<div class='berkedip'>Akan Berakhir</div>";
                             } else if (tanggal_akhir_kerja_sama < date_sekarang) {
                                 result = "Berakhir";
