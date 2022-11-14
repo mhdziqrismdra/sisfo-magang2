@@ -32,28 +32,22 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="tahunKerjaSama">Tahun Kerja Sama</label>
-                                    <select class="form-control" name="tahunKerjaSama" id="tahunKerjaSama">
-                                        <option value="">Pilih Tahun Kerja Sama</option>
-                                        @foreach ($tahunKerjaSama as $item)
-                                            <option value="{{ $item->tahun }}">{{ $item->tahun }}</option>
-                                        @endforeach
-                                        <option value=">5">> 5 tahun</option>
-                                    </select>
+                                    
                                 </div>
                             </div>
                         </div>
 
                         <div class="table-responsive">
-                            {{-- tabel MOU --}}
                             <table id="myDatatables" class="display table table-striped table-hover text-nowrap"
                                 cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
                                         <th>No</th>
                                         <th>Action</th>
+                                        <th>Kategori</th>
+                                        <th>Tingkat</th>
                                         <th>Tanggal</th>
                                         <th>Nama Lembaga</th>
-                                        <th>Periode</th>
                                         <th>Negara</th>
                                         <th>Provinsi</th>
                                         <th>Kabupaten/Kota</th>
@@ -61,7 +55,7 @@
                                         <th>Kelurahan</th>
                                         <th>ALamat</th>
                                         <th>Durasi</th>
-                                        <th>Akhir</th>
+                                        <th>Tanggal Akhir</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>
@@ -102,7 +96,7 @@
 
         function btnTambah() {
             $.ajax({
-                url: "{{ url('mou/create') }}",
+                url: "{{ url('moa/create') }}",
                 type: "GET",
                 dataType: "JSON",
                 success: function(respon) {
@@ -183,10 +177,7 @@
                     }
                 ],
                 ajax: {
-                    url: "{{ url('mou/list') }}",
-                    data: {
-                        tahuKerjaSama : tahunKerjaSama
-                    },
+                    url: "{{ url('moa/list') }}",
                     type: "GET",
                     dataType: "JSON",
                 },
@@ -203,9 +194,9 @@
                         searchable: false,
                         render: function(data, type, row, meta) {
                             let date_sekarang = new Date();
-                            let tanggal_akhir_kerja_sama = new Date(row['tanggal_akhir_kerja_sama']);
+                            let tanggal_akhir = new Date(row['tanggal_akhir']);
                             let btnPerpanjang = ``;
-                            if (tanggal_akhir_kerja_sama < date_sekarang) {
+                            if (tanggal_akhir < date_sekarang) {
                                 btnPerpanjang = `<button type="button" onclick="btnPerpanjang('${data}')" title="Perpanjang" class="btn btn-success btn-sm">
                                                     <i class="fas fa-calendar-plus"></i>
                                                 </button>`;
@@ -225,17 +216,14 @@
                         }
                     },
                     {
-                        data: "tanggal_kerja_sama",
+                        data: "kategori_moa",
                         searchable: false,
-                        render: function(data, type, row, meta) {
-                            return getFormattedDate(data);
-                        }
-                    },
-                    {
-                        data: "nama_lembaga_mitra",
-                    },
-                    {
-                        data: "periode",
+                    }, {
+                        data: "tingkat_moa",
+                    }, {
+                        data: "tanggal",
+                    }, {
+                        data: "lembaga_mitra",
                     }, {
                         data: "nama_negara",
                     },
@@ -255,10 +243,10 @@
                         data: "alamat",
                     },
                     {
-                        data: "durasi_kerja_sama",
+                        data: "durasi",
                     },
                     {
-                        data: "tanggal_akhir_kerja_sama",
+                        data: "tanggal_akhir",
                         searchable: false,
                         render: function(data, type, row, meta) {
                             return getFormattedDate(data);
@@ -269,13 +257,13 @@
                         orderable: false,
                         render: function(data, type, row, meta) {
                             let date_sekarang = new Date();
-                            let tanggal_akhir_kerja_sama = new Date(row['tanggal_akhir_kerja_sama']);
+                            let tanggal_akhir = new Date(row['tanggal_akhir']);
                             var taggal_6_bulan = addMonths(date_sekarang, 6)
                             let result = ``;
-                            if (tanggal_akhir_kerja_sama > date_sekarang && tanggal_akhir_kerja_sama <
+                            if (tanggal_akhir > date_sekarang && tanggal_akhir <
                                 new Date(taggal_6_bulan)) {
                                 result = "<div class='berkedip'>Akan Berakhir</div>";
-                            } else if (tanggal_akhir_kerja_sama < date_sekarang) {
+                            } else if (tanggal_akhir < date_sekarang) {
                                 result = "Berakhir";
                             } else {
                                 result = "Aktif";

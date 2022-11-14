@@ -25,14 +25,32 @@
                 @endif
 
                 <div class="form-group">
-                    <label for="tanggal_kerja_sama">Tanggal</label>
-                    <input type="date" class="form-control" id="tanggal_kerja_sama" name="tanggal_kerja_sama"
-                        value="{{ $tanggal_kerja_sama }}" placeholder="Masukan Tanggal ...">
+                    <label>Kategori</label>
+                    <select class="form-control" name="kategori_moa" id="kategori_moa">
+                        <option value="">--Pilih kategori--</option>
+                        <option value="Pendidikan/Pengajaran" <?php echo $kategori_moa == "Pendidikan/Pengajaran" ? "selected" : "" ?>>Pendidikan/Pengajaran</option>
+                        <option value="Penelitian" <?php echo $kategori_moa == "Penelitian" ? "selected" : "" ?>>Penelitian</option>
+                        <option value="Pengabdian Masyarakat" <?php echo $kategori_moa == "Pengabdian Masyarakat" ? "selected" : "" ?>>Pengabdian Masyarakat</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label for="nama_lembaga_mitra">Nama Lembaga Mitra</label>
-                    <input type="text" class="form-control" id="nama_lembaga_mitra" name="nama_lembaga_mitra"
-                        value="{{ $nama_lembaga_mitra }}" placeholder="Masukan Nama Lembaga Mitra ...">
+                    <label>Tingkatan</label>
+                    <select class="form-control" name="tingkat_moa" id="tingkat_moa">
+                        <option value="">--Pilih Tingkatan--</option>
+                        <option value="Wilayah" <?php echo $tingkat_moa == "Wilayah" ? "selected" : "" ?>>Wilayah</option>
+                        <option value="Nasional" <?php echo $tingkat_moa == "Nasional" ? "selected" : "" ?>>Nasional</option>
+                        <option value="Internasional" <?php echo $tingkat_moa == "Internasional" ? "selected" : "" ?>>Internasional</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tanggal">Tanggal</label>
+                    <input type="date" class="form-control" id="tanggal" name="tanggal"
+                        value="{{ $tanggal }}" placeholder="Masukan Tanggal ...">
+                </div>
+                <div class="form-group">
+                    <label for="lembaga_mitra">Nama Lembaga Mitra</label>
+                    <input type="text" class="form-control" id="lembaga_mitra" name="lembaga_mitra"
+                        value="{{ $lembaga_mitra }}" placeholder="Masukan Nama Lembaga Mitra ...">
                 </div>
                 <div class="form-group">
                     <label for="negara_id">Negara</label>
@@ -96,14 +114,21 @@
                         placeholder="Masukan Alamat ..."><?= $alamat ?></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="durasi_kerja_sama">Durasi</label>
-                    <input type="number" class="form-control" id="durasi_kerja_sama" name="durasi_kerja_sama"
-                        value="{{ $durasi_kerja_sama }}" placeholder="Masukan Durasi ...">
+                    <label for="durasi">Durasi</label>
+                    <input type="number" class="form-control" id="durasi" name="durasi"
+                        value="{{ $durasi }}" placeholder="Masukan Durasi ...">
                 </div>
                 <div class="form-group">
-                    <label for="dokumen">Dokumen</label>
-                    <input type="file" class="form-control" id="dokumen" name="dokumen"
-                        placeholder="Masukan Tanggal ...">
+                    <label for="dokumen1">Dokumen 1</label>
+                    <input type="file" class="form-control" id="dokumen1" name="dokumen1">
+                </div>
+                <div class="form-group">
+                    <label for="dokumen2">Dokumen 2</label>
+                    <input type="file" class="form-control" id="dokumen2" name="dokumen2">
+                </div>
+                <div class="form-group">
+                    <label for="dokumen3">Dokumen 3</label>
+                    <input type="file" class="form-control" id="dokumen3" name="dokumen3">
                 </div>
                 <div class="form-group">
                     <label for="status">Status</label>
@@ -116,7 +141,7 @@
             </div>
             <div class="card-action">
                 <input type="hidden" name="id" id="id" value="<?= $id ?>">
-                <input type="hidden" name="periode" id="periode" value="<?= $periode ?>">
+                
                 <button class="btn btn-danger" type="button" class="close" data-dismiss="modal"
                     aria-label="Close"><i class="fas fa-times"></i> Cancel</button>
                 <button class="btn btn-success pull-right" id="submit"><i class="far fa-save"></i> Submit</button>
