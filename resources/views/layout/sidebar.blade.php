@@ -58,7 +58,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{url('berkas-dokumen')}}">
+                    <a href="{{url('moa')}}">
                         <i class="far fa-file"></i>
                         <p>Memorandum of Agreement (MOA)</p>
                     </a>

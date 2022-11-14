@@ -7,6 +7,7 @@ use App\Http\Controllers\PenilaianController;
 use App\Http\Controllers\CetakPenilaianController;
 use App\Http\Controllers\DokumenController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\MoaController;
 use App\Http\Controllers\MouController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\TestController;
@@ -97,6 +98,11 @@ Route::middleware(['auth:user', 'ceklevel:Admin'])->group(function () {
     Route::get('mou/kabupaten', [MouController::class, 'kotaKabupaten']);
     Route::get('mou/kecamatan', [MouController::class, 'kecamatan']);
     Route::get('mou/kelurahan', [MouController::class, 'kelurahan']);
+
+
+    // app\Http\Controllers\MoaController.php
+    Route::get('moa', [MoaController::class, 'index']);
+    Route::get('moa/list', [MoaController::class, 'list']);
 });
 
 Route::middleware(['auth:pengguna', 'ceklevel:Pegawai'])->group(function () {

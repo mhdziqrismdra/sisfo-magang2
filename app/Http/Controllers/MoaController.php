@@ -17,14 +17,12 @@ use Illuminate\Support\Facades\Validator;
 use Ozdemir\Datatables\Datatables;
 use Ozdemir\Datatables\DB\LaravelAdapter;
 
-class MouController extends Controller
+class MoaController extends Controller
 {
     public function index()
     {
         $data['tahunKerjaSama'] = Mou::selectRaw('YEAR(tanggal_kerja_sama) as tahun')->orderBy('tanggal_kerja_sama')->get();
-        return view('mou.index', $data);
-        // $oMou = new Mou();
-        // print_r($oMou->getMOU()->get());
+        return view('moa.index', $data);
     }
 
     public function list(Request $request)
@@ -415,43 +413,6 @@ class MouController extends Controller
         $respon['status'] = true;
         $respon['token'] = csrf_token();
         $respon['view_modal_form'] = view('mou.detail', $data)->render();
-        return response()->json($respon);
-    }
-
-    public function provinsi()
-    {
-        $respon['status'] = true;
-        $respon['provinsi_result'] = Provinsi::orderBy('province_name')->get();
-        return response()->json($respon);
-    }
-
-    public function kotaKabupaten(Request $request)
-    {
-        $provinsiId = $request->provinsi_id;
-        $oKotaKabupaten = new KotaKabupaten();
-
-        $respon['status'] = true;
-        $respon['kabupaten_result'] = $oKotaKabupaten->getKotaKabupatenByProvinsi($provinsiId)->get();
-        return response()->json($respon);
-    }
-
-    public function kecamatan(Request $request)
-    {
-        $kotaKabupatenId = $request->kota_kabupaten_id;
-        $oKecamatan = new Kecamatan();
-
-        $respon['status'] = true;
-        $respon['kecamatan_result'] = $oKecamatan->getKecamatanByKabupaten($kotaKabupatenId)->get();
-        return response()->json($respon);
-    }
-
-    public function kelurahan(Request $request)
-    {
-        $kecamataId = $request->kecamata_id;
-        $Kelurahan = new Kelurahan();
-
-        $respon['status'] = true;
-        $respon['kelurahan_result'] = $Kelurahan->getkelurahanByKecamatan($kecamataId)->get();
         return response()->json($respon);
     }
 }
