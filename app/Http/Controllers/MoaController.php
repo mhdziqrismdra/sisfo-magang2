@@ -104,7 +104,7 @@ class MoaController extends Controller
                 'tingkat_moa'     => 'required',
                 'tanggal'     => 'required',
                 'lembaga_mitra'   => 'required',
-                'negara_id'   => 'required',                
+                'negara_id'   => 'required',
                 'alamat'   => 'required',
                 'durasi'   => 'required',
             ]);
@@ -122,16 +122,40 @@ class MoaController extends Controller
             );
         }
 
-        // check uploaded files
-        if ($request->file('dokumen')) {
+        // check uploaded files dokumen1
+        if ($request->file('dokumen1')) {
 
-            $file = $request->file('dokumen');
+            $file = $request->file('dokumen1');
             $extension = $file->getClientOriginalExtension();
             $filename = "Doc_MOA_" . time() . "." . $extension;
             $location = 'uploads/moa/';
             // Upload file
             $file->move($location, $filename);
-            $dataInsert['dokumen'] = $filename;
+            $dataInsert['dokumen1'] = $filename;
+        }
+
+        // check uploaded files dokumen2
+        if ($request->file('dokumen2')) {
+
+            $file = $request->file('dokumen2');
+            $extension = $file->getClientOriginalExtension();
+            $filename = "Doc_MOA_" . time() . "." . $extension;
+            $location = 'uploads/moa/';
+            // Upload file
+            $file->move($location, $filename);
+            $dataInsert['dokumen2'] = $filename;
+        }
+
+        // check uploaded files dokumen3
+        if ($request->file('dokumen3')) {
+
+            $file = $request->file('dokumen3');
+            $extension = $file->getClientOriginalExtension();
+            $filename = "Doc_MOA_" . time() . "." . $extension;
+            $location = 'uploads/moa/';
+            // Upload file
+            $file->move($location, $filename);
+            $dataInsert['dokumen3'] = $filename;
         }
 
         // if validation success
@@ -141,7 +165,7 @@ class MoaController extends Controller
             $dataInsert['kecamata_id'] = $request->kecamata_id;
             $dataInsert['kelurahan_id'] = $request->kelurahan_id;
         }
-        
+
         $dataInsert['kategori_moa'] = $request->kategori_moa;
         $dataInsert['tingkat_moa'] = $request->tingkat_moa;
         $dataInsert['tanggal'] = $request->tanggal;
