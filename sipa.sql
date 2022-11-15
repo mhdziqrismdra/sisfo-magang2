@@ -15,7 +15,8 @@ MySQL - 10.4.12-MariaDB-log : Database - sisfo-bkn
 /*Table structure for table `tbl_moa` */
 
 CREATE TABLE `tbl_moa` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `mou_id` bigint(20) DEFAULT NULL,
   `kategori_moa` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tingkat_moa` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tanggal` date DEFAULT NULL,
@@ -40,7 +41,7 @@ CREATE TABLE `tbl_moa` (
 
 /*Data for the table `tbl_moa` */
 
-insert  into `tbl_moa`(`id`,`kategori_moa`,`tingkat_moa`,`tanggal`,`lembaga_mitra`,`negara_id`,`provinsi_id`,`kota_kabupaten_id`,`kecamata_id`,`kelurahan_id`,`alamat`,`durasi`,`tanggal_akhir`,`dokumen1`,`dokumen2`,`dokumen3`,`kode_prodi`,`status`,`created_at`,`updated_at`) values (1,'Pendidikan/Pengajaran','Wilayah','2022-11-15','Nama Lembaga Mitra',2,NULL,NULL,NULL,NULL,'Nama Lembaga MitraNama Lembaga Mitra',1,'2023-11-15',NULL,NULL,NULL,NULL,1,'2022-11-15 05:52:14','2022-11-15 05:52:14');
+insert  into `tbl_moa`(`id`,`mou_id`,`kategori_moa`,`tingkat_moa`,`tanggal`,`lembaga_mitra`,`negara_id`,`provinsi_id`,`kota_kabupaten_id`,`kecamata_id`,`kelurahan_id`,`alamat`,`durasi`,`tanggal_akhir`,`dokumen1`,`dokumen2`,`dokumen3`,`kode_prodi`,`status`,`created_at`,`updated_at`) values (1,1,'Pendidikan/Pengajaran','Wilayah','2022-11-15','Nama Lembaga Mitra',2,NULL,NULL,NULL,NULL,'Nama Lembaga MitraNama Lembaga Mitra',1,'2023-11-15',NULL,NULL,NULL,NULL,1,'2022-11-15 05:52:14','2022-11-16 05:10:52');
 
 /*Table structure for table `tbl_mou` */
 
