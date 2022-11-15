@@ -142,10 +142,10 @@
                 <div class="form-group">
                     <label for="status">Tujuan Prodi</label>
                     <div class="form-check">
-                        @foreach ($mou_result as $item)
+                        @foreach ($prodi_result as $item)
                         <label class="form-check-label">
                             <input class="form-check-input" type="checkbox" value="">
-                            <span class="form-check-sign">{{$item->nama_lembaga_mitra}}</span>
+                            <span class="form-check-sign">{{$item->nama_prodi}}</span>
                         </label>
                         @endforeach
                     </div>

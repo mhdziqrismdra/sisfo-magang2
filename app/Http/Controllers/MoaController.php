@@ -77,6 +77,7 @@ class MoaController extends Controller
         $data['kota_kabupaten_result'] = $oKotaKabupaten->getKotaKabupatenByProvinsi()->get();
         $data['kecamatan_result'] = $oKecamatan->getKecamatanByKabupaten()->get();
         $data['kelurahan_result'] = $oKelurahan->getkelurahanByKecamatan()->get();
+        $data['prodi_result'] = DB::table('tb_prodi')->get();
 
         $respon['status'] = true;
 
