@@ -32,7 +32,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="tahunKerjaSama">Tahun Kerja Sama</label>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -44,6 +44,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Action</th>
+                                        <th>MOU</th>
                                         <th>Kategori</th>
                                         <th>Tingkat</th>
                                         <th>Tanggal</th>
@@ -214,8 +215,10 @@
                                         </button>
                                     </div>`;
                         }
-                    },
-                    {
+                    }, {
+                        data: "nama_lembaga_mitra",
+                        searchable: false,
+                    }, {
                         data: "kategori_moa",
                         searchable: false,
                     }, {
@@ -312,9 +315,9 @@
             swalLoading();
             getCSRF();
             $.ajax({
-                url: "{{ url('mou/perpanjang') }}",
+                url: "{{ url('moa/perpanjang') }}",
                 data: {
-                    mou_id: id,
+                    moa_id: id,
                 },
                 type: "PUT",
                 dataType: "JSON",
@@ -335,9 +338,9 @@
             swalLoading();
             getCSRF();
             $.ajax({
-                url: "{{ url('mou/update') }}",
+                url: "{{ url('moa/update') }}",
                 data: {
-                    mou_id: id,
+                    moa_id: id,
                 },
                 type: "PUT",
                 dataType: "JSON",
@@ -358,9 +361,9 @@
             swalLoading();
             getCSRF();
             $.ajax({
-                url: "{{ url('mou/detail') }}",
+                url: "{{ url('moa/detail') }}",
                 data: {
-                    mou_id: id,
+                    moa_id: id,
                 },
                 type: "PUT",
                 dataType: "JSON",

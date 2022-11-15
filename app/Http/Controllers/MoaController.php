@@ -6,6 +6,7 @@ use App\Models\Kecamatan;
 use App\Models\Kelurahan;
 use App\Models\KotaKabupaten;
 use App\Models\Moa;
+use App\Models\Mou;
 use App\Models\Negara;
 use App\Models\Provinsi;
 use Carbon\Carbon;
@@ -27,7 +28,8 @@ class MoaController extends Controller
 
     public function list()
     {
-        $sqlBuilder = Moa::select(['tbl_moa.id as no', 'tbl_moa.id', 'kategori_moa', 'tingkat_moa', 'tanggal', 'lembaga_mitra', 'master_negara.nama_negara', 'master_provinsi.province_name', 'master_kota_kabupaten.kota_kabupaten_nama', 'master_kecamatan.kecamatan_nama', 'master_kelurahan.kelurahan_nama', 'alamat', 'durasi', 'tanggal_akhir', 'dokumen1', 'dokumen2', 'dokumen3', 'kode_prodi', 'status'])
+        $sqlBuilder = Moa::select(['tbl_moa.id as no', 'tbl_moa.id', 'tbl_mou.nama_lembaga_mitra', 'kategori_moa', 'tingkat_moa', 'tanggal', 'lembaga_mitra', 'master_negara.nama_negara', 'master_provinsi.province_name', 'master_kota_kabupaten.kota_kabupaten_nama', 'master_kecamatan.kecamatan_nama', 'master_kelurahan.kelurahan_nama', 'tbl_moa.alamat', 'durasi', 'tanggal_akhir', 'dokumen1', 'dokumen2', 'dokumen3', 'kode_prodi', 'tbl_moa.status'])
+            ->join('tbl_mou', 'tbl_mou.id', 'tbl_moa.mou_id')
             ->join('master_negara', 'master_negara.id', 'tbl_moa.negara_id')
             ->leftJoin('master_provinsi', 'master_provinsi.master_provinsi_id', 'tbl_moa.provinsi_id')
             ->leftJoin('master_kota_kabupaten', 'master_kota_kabupaten.master_kota_kabupaten_id', 'tbl_moa.kota_kabupaten_id')
@@ -50,6 +52,7 @@ class MoaController extends Controller
         $data['title'] = "Tambah MOA";
         $data['action'] = 'moa/create/action';
         $data['id'] = "";
+        $data['mou_id'] = "";
         $data['kategori_moa'] = "";
         $data['tingkat_moa'] = "";
         $data['tanggal'] = "";
@@ -68,6 +71,7 @@ class MoaController extends Controller
         $data['kode_prodi'] = "";
         $data['status'] = "";
 
+        $data['mou_result'] = Mou::all();
         $data['negara_result'] = Negara::all();
         $data['provinsi_result'] = Provinsi::orderBy('province_name')->get();
         $data['kota_kabupaten_result'] = $oKotaKabupaten->getKotaKabupatenByProvinsi()->get();
@@ -86,6 +90,7 @@ class MoaController extends Controller
         // if country id 102 is indonesia
         if ($request->negara_id == '102') {
             $validator = Validator::make($request->all(), [
+                'mou_id'     => 'required',
                 'kategori_moa'     => 'required',
                 'tingkat_moa'     => 'required',
                 'tanggal'     => 'required',
@@ -100,6 +105,7 @@ class MoaController extends Controller
             ]);
         } else {
             $validator = Validator::make($request->all(), [
+                'mou_id'     => 'required',
                 'kategori_moa'     => 'required',
                 'tingkat_moa'     => 'required',
                 'tanggal'     => 'required',
@@ -174,7 +180,7 @@ class MoaController extends Controller
         $dataInsert['alamat'] = $request->alamat;
         $dataInsert['durasi'] = $request->durasi;
         $dataInsert['tanggal_akhir'] = date('Y-m-d', strtotime($request->tanggal . ' + ' . $request->durasi . ' years'));
-        $dataInsert['status'] = 1;
+        $dataInsert['status'] = $request->status;
 
         $dataGet = Moa::create($dataInsert);
 
@@ -191,29 +197,42 @@ class MoaController extends Controller
         $oKecamatan = new Kecamatan();
         $oKelurahan = new Kelurahan();
 
-        $id = $request->mou_id;
-        $mowRow = Moa::where('id', $id)->first();
+        $id = $request->moa_id;
+        $moaRow = Moa::where('id', $id)->first();
 
-        $data['title'] = "Update MOU";
-        $data['action'] = 'mou/update/action';
-        $data['id'] = $id;
-        $data['periode'] = $mowRow->periode;
-        $data['tanggal'] = $mowRow->tanggal;
-        $data['nama_lembaga_mitra'] = $mowRow->nama_lembaga_mitra;
-        $data['negara_id'] = $mowRow->negara_id;
-        $data['provinsi_id'] = $mowRow->provinsi_id;
-        $data['kota_kabupaten_id'] = $mowRow->kota_kabupaten_id;
-        $data['kecamata_id'] = $mowRow->kecamata_id;
-        $data['kelurahan_id'] = $mowRow->kelurahan_id;
-        $data['alamat'] = $mowRow->alamat;
-        $data['durasi'] = $mowRow->durasi;
-        $data['status'] = $mowRow->status;
+
+        $oKotaKabupaten = new KotaKabupaten();
+        $oKecamatan = new Kecamatan();
+        $oKelurahan = new Kelurahan();
+
+        $data['title'] = "UpDATE MOA";
+        $data['action'] = 'moa/update/action';
+        $data['id'] = $moaRow->id;
+        $data['mou_id'] = $moaRow->mou_id;
+        $data['kategori_moa'] = $moaRow->kategori_moa;
+        $data['tingkat_moa'] = $moaRow->tingkat_moa;
+        $data['tanggal'] = $moaRow->tanggal;
+        $data['lembaga_mitra'] = $moaRow->lembaga_mitra;
+        $data['negara_id'] = $moaRow->negara_id;
+        $data['provinsi_id'] = $moaRow->provinsi_id;
+        $data['kota_kabupaten_id'] = $moaRow->kota_kabupaten_id;
+        $data['kecamata_id'] = $moaRow->kecamata_id;
+        $data['kelurahan_id'] = $moaRow->kelurahan_id;
+        $data['alamat'] = $moaRow->alamat;
+        $data['durasi'] = $moaRow->durasi;
+        $data['tanggal_akhir'] = $moaRow->tanggal_akhir;
+        $data['dokumen1'] = $moaRow->dokumen1;
+        $data['dokumen2'] = $moaRow->dokumen2;
+        $data['dokumen3'] = $moaRow->dokumen3;
+        $data['kode_prodi'] = $moaRow->kode_prodi;
+        $data['status'] = $moaRow->status;
+
+        $data['mou_result'] = Mou::all();
         $data['negara_result'] = Negara::all();
         $data['provinsi_result'] = Provinsi::orderBy('province_name')->get();
-        $data['kota_kabupaten_result'] = $oKotaKabupaten->getKotaKabupatenByProvinsi($mowRow->provinsi_id)->get();
-        $data['kecamatan_result'] = $oKecamatan->getKecamatanByKabupaten($mowRow->kota_kabupaten_id)->get();
-        $data['kelurahan_result'] = $oKelurahan->getkelurahanByKecamatan($mowRow->kecamata_id)->get();
-
+        $data['kota_kabupaten_result'] = $oKotaKabupaten->getKotaKabupatenByProvinsi($moaRow->provinsi_id)->get();
+        $data['kecamatan_result'] = $oKecamatan->getKecamatanByKabupaten($moaRow->kota_kabupaten_id)->get();
+        $data['kelurahan_result'] = $oKelurahan->getkelurahanByKecamatan($moaRow->kecamata_id)->get();
 
         $respon['status'] = true;
         $respon['token'] = csrf_token();
@@ -227,8 +246,10 @@ class MoaController extends Controller
         // if country id 102 is indonesia
         if ($request->negara_id == '102') {
             $validator = Validator::make($request->all(), [
+                'kategori_moa'     => 'required',
+                'tingkat_moa'     => 'required',
                 'tanggal'     => 'required',
-                'nama_lembaga_mitra'   => 'required',
+                'lembaga_mitra'   => 'required',
                 'negara_id'   => 'required',
                 'provinsi_id'   => 'required',
                 'kota_kabupaten_id' => 'required',
@@ -236,14 +257,18 @@ class MoaController extends Controller
                 'kelurahan_id'   => 'required',
                 'alamat'   => 'required',
                 'durasi'   => 'required',
+                'status'   => 'required',
             ]);
         } else {
             $validator = Validator::make($request->all(), [
+                'kategori_moa'     => 'required',
+                'tingkat_moa'     => 'required',
                 'tanggal'     => 'required',
-                'nama_lembaga_mitra'   => 'required',
+                'lembaga_mitra'   => 'required',
                 'negara_id'   => 'required',
                 'alamat'   => 'required',
                 'durasi'   => 'required',
+                'status'   => 'required',
             ]);
         }
 
@@ -254,21 +279,45 @@ class MoaController extends Controller
                 [
                     'status' => false,
                     'token' => csrf_token(),
-                    'message' => $validator->errors()->all(),
+                    'message' => $validator->errors()->all()
                 ]
             );
         }
 
-        // check uploaded files
-        if ($request->file('dokumen')) {
+        // check uploaded files dokumen1
+        if ($request->file('dokumen1')) {
 
-            $file = $request->file('dokumen');
+            $file = $request->file('dokumen1');
             $extension = $file->getClientOriginalExtension();
-            $filename = "Doc_MOU_" . time() . "." . $extension;
-            $location = 'uploads/mou/';
+            $filename = "Doc_MOA_" . time() . "." . $extension;
+            $location = 'uploads/moa/';
             // Upload file
             $file->move($location, $filename);
-            $dataUpdate['dokumen'] = $filename;
+            $dataUpdate['dokumen1'] = $filename;
+        }
+
+        // check uploaded files dokumen2
+        if ($request->file('dokumen2')) {
+
+            $file = $request->file('dokumen2');
+            $extension = $file->getClientOriginalExtension();
+            $filename = "Doc_MOA_" . time() . "." . $extension;
+            $location = 'uploads/moa/';
+            // Upload file
+            $file->move($location, $filename);
+            $dataUpdate['dokumen2'] = $filename;
+        }
+
+        // check uploaded files dokumen3
+        if ($request->file('dokumen3')) {
+
+            $file = $request->file('dokumen3');
+            $extension = $file->getClientOriginalExtension();
+            $filename = "Doc_MOA_" . time() . "." . $extension;
+            $location = 'uploads/moa/';
+            // Upload file
+            $file->move($location, $filename);
+            $dataUpdate['dokumen3'] = $filename;
         }
 
         // if validation success
@@ -278,19 +327,23 @@ class MoaController extends Controller
             $dataUpdate['kecamata_id'] = $request->kecamata_id;
             $dataUpdate['kelurahan_id'] = $request->kelurahan_id;
         }
+
+        $dataUpdate['mou_id'] = $request->mou_id;
+        $dataUpdate['kategori_moa'] = $request->kategori_moa;
+        $dataUpdate['tingkat_moa'] = $request->tingkat_moa;
         $dataUpdate['tanggal'] = $request->tanggal;
-        $dataUpdate['nama_lembaga_mitra'] = $request->nama_lembaga_mitra;
+        $dataUpdate['lembaga_mitra'] = $request->lembaga_mitra;
         $dataUpdate['negara_id'] = $request->negara_id;
         $dataUpdate['alamat'] = $request->alamat;
         $dataUpdate['durasi'] = $request->durasi;
         $dataUpdate['tanggal_akhir'] = date('Y-m-d', strtotime($request->tanggal . ' + ' . $request->durasi . ' years'));
         $dataUpdate['status'] = $request->status;
 
-        Moa::where(['id' => $request->id])->update($dataUpdate);
+        $dataGet = Moa::where(['id' => $request->id])->update($dataUpdate);
 
         $respon['status'] = true;
         $respon['token'] = csrf_token();
-        $respon['message'] = "Berhasil update data MOU";
+        $respon['message'] = "Berhasil update data MOA";
 
         return response()->json($respon);
     }
@@ -302,28 +355,28 @@ class MoaController extends Controller
         $oKelurahan = new Kelurahan();
 
         $id = $request->mou_id;
-        $mowRow = Moa::where('id', $id)->first();
+        $moaRow = Moa::where('id', $id)->first();
 
         $data['title'] = "Perpanjang MOU";
         $data['action'] = 'mou/perpanjang/action';
         $data['is_perpanjang'] = true; // untuk menandakan ini form perpanjang
         $data['id'] = $id;
-        $data['periode'] = $mowRow->periode;
+        $data['periode'] = $moaRow->periode;
         $data['tanggal'] = "";
-        $data['nama_lembaga_mitra'] = $mowRow->nama_lembaga_mitra;
-        $data['negara_id'] = $mowRow->negara_id;
-        $data['provinsi_id'] = $mowRow->provinsi_id;
-        $data['kota_kabupaten_id'] = $mowRow->kota_kabupaten_id;
-        $data['kecamata_id'] = $mowRow->kecamata_id;
-        $data['kelurahan_id'] = $mowRow->kelurahan_id;
-        $data['alamat'] = $mowRow->alamat;
-        $data['durasi'] = $mowRow->durasi;
-        $data['status'] = $mowRow->status;
+        $data['nama_lembaga_mitra'] = $moaRow->nama_lembaga_mitra;
+        $data['negara_id'] = $moaRow->negara_id;
+        $data['provinsi_id'] = $moaRow->provinsi_id;
+        $data['kota_kabupaten_id'] = $moaRow->kota_kabupaten_id;
+        $data['kecamata_id'] = $moaRow->kecamata_id;
+        $data['kelurahan_id'] = $moaRow->kelurahan_id;
+        $data['alamat'] = $moaRow->alamat;
+        $data['durasi'] = $moaRow->durasi;
+        $data['status'] = $moaRow->status;
         $data['negara_result'] = Negara::all();
         $data['provinsi_result'] = Provinsi::orderBy('province_name')->get();
-        $data['kota_kabupaten_result'] = $oKotaKabupaten->getKotaKabupatenByProvinsi($mowRow->provinsi_id)->get();
-        $data['kecamatan_result'] = $oKecamatan->getKecamatanByKabupaten($mowRow->kota_kabupaten_id)->get();
-        $data['kelurahan_result'] = $oKelurahan->getkelurahanByKecamatan($mowRow->kecamata_id)->get();
+        $data['kota_kabupaten_result'] = $oKotaKabupaten->getKotaKabupatenByProvinsi($moaRow->provinsi_id)->get();
+        $data['kecamatan_result'] = $oKecamatan->getKecamatanByKabupaten($moaRow->kota_kabupaten_id)->get();
+        $data['kelurahan_result'] = $oKelurahan->getkelurahanByKecamatan($moaRow->kecamata_id)->get();
 
 
         $respon['status'] = true;

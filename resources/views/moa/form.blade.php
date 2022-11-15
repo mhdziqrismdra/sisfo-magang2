@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="card-body">
-                
+
                 @if (isset($is_perpanjang))
                     <div class="card card-dark bg-info-gradient">
                         <div class="card-body bubble-shadow">
@@ -23,29 +23,38 @@
                         </div>
                     </div>
                 @endif
-
+                <div class="form-group">
+                    <label for="mou_id">Pilih MOU</label>
+                    <select class="form-control" id="mou_id" name="mou_id">
+                        <option value="">--Pilih MOU--</option>
+                        @foreach ($mou_result as $item)
+                            <option value="{{ $item->id }}" {{ $mou_id == $item->id ? 'selected' : '' }}>
+                                {{ $item->nama_lembaga_mitra }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="form-group">
                     <label>Kategori</label>
                     <select class="form-control" name="kategori_moa" id="kategori_moa">
                         <option value="">--Pilih kategori--</option>
-                        <option value="Pendidikan/Pengajaran" <?php echo $kategori_moa == "Pendidikan/Pengajaran" ? "selected" : "" ?>>Pendidikan/Pengajaran</option>
-                        <option value="Penelitian" <?php echo $kategori_moa == "Penelitian" ? "selected" : "" ?>>Penelitian</option>
-                        <option value="Pengabdian Masyarakat" <?php echo $kategori_moa == "Pengabdian Masyarakat" ? "selected" : "" ?>>Pengabdian Masyarakat</option>
+                        <option value="Pendidikan/Pengajaran" <?php echo $kategori_moa == 'Pendidikan/Pengajaran' ? 'selected' : ''; ?>>Pendidikan/Pengajaran</option>
+                        <option value="Penelitian" <?php echo $kategori_moa == 'Penelitian' ? 'selected' : ''; ?>>Penelitian</option>
+                        <option value="Pengabdian Masyarakat" <?php echo $kategori_moa == 'Pengabdian Masyarakat' ? 'selected' : ''; ?>>Pengabdian Masyarakat</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Tingkatan</label>
                     <select class="form-control" name="tingkat_moa" id="tingkat_moa">
                         <option value="">--Pilih Tingkatan--</option>
-                        <option value="Wilayah" <?php echo $tingkat_moa == "Wilayah" ? "selected" : "" ?>>Wilayah</option>
-                        <option value="Nasional" <?php echo $tingkat_moa == "Nasional" ? "selected" : "" ?>>Nasional</option>
-                        <option value="Internasional" <?php echo $tingkat_moa == "Internasional" ? "selected" : "" ?>>Internasional</option>
+                        <option value="Wilayah" <?php echo $tingkat_moa == 'Wilayah' ? 'selected' : ''; ?>>Wilayah</option>
+                        <option value="Nasional" <?php echo $tingkat_moa == 'Nasional' ? 'selected' : ''; ?>>Nasional</option>
+                        <option value="Internasional" <?php echo $tingkat_moa == 'Internasional' ? 'selected' : ''; ?>>Internasional</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="tanggal">Tanggal</label>
-                    <input type="date" class="form-control" id="tanggal" name="tanggal"
-                        value="{{ $tanggal }}" placeholder="Masukan Tanggal ...">
+                    <input type="date" class="form-control" id="tanggal" name="tanggal" value="{{ $tanggal }}"
+                        placeholder="Masukan Tanggal ...">
                 </div>
                 <div class="form-group">
                     <label for="lembaga_mitra">Nama Lembaga Mitra</label>
@@ -141,7 +150,7 @@
             </div>
             <div class="card-action">
                 <input type="hidden" name="id" id="id" value="<?= $id ?>">
-                
+
                 <button class="btn btn-danger" type="button" class="close" data-dismiss="modal"
                     aria-label="Close"><i class="fas fa-times"></i> Cancel</button>
                 <button class="btn btn-success pull-right" id="submit"><i class="far fa-save"></i> Submit</button>
