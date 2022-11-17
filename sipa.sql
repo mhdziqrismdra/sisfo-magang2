@@ -39,8 +39,7 @@ CREATE TABLE `tbl_moa` (
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`),
-  KEY `mou_id` (`mou_id`),
-  CONSTRAINT `tbl_moa_ibfk_1` FOREIGN KEY (`mou_id`) REFERENCES `tbl_mou` (`id`)
+  KEY `mou_id` (`mou_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `tbl_moa` */
