@@ -107,6 +107,7 @@ Route::middleware(['auth:user', 'ceklevel:Admin'])->group(function () {
     Route::post('moa/create/action', [MoaController::class, 'createAction']);
     Route::put('moa/update', [MoaController::class, 'update']);
     Route::post('moa/update/action', [MoaController::class, 'updateAction']);
+    Route::put('moa/detail', [MoaController::class, 'detail']);
 });
 
 Route::middleware(['auth:pengguna', 'ceklevel:Pegawai'])->group(function () {

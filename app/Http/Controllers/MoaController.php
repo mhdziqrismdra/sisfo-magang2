@@ -28,9 +28,10 @@ class MoaController extends Controller
 
     public function list()
     {
-        $sqlBuilder = Moa::select(['tbl_moa.id as no', 'tbl_moa.id', 'tbl_mou.nama_lembaga_mitra', 'kategori_moa', 'tingkat_moa', 'tanggal', 'lembaga_mitra', 'master_negara.nama_negara', 'master_provinsi.province_name', 'master_kota_kabupaten.kota_kabupaten_nama', 'master_kecamatan.kecamatan_nama', 'master_kelurahan.kelurahan_nama', 'tbl_moa.alamat', 'durasi', 'tanggal_akhir', 'dokumen1', 'dokumen2', 'dokumen3', 'kode_prodi', 'tbl_moa.status'])
-            ->join('tbl_mou', 'tbl_mou.id', 'tbl_moa.mou_id')
-            ->join('master_negara', 'master_negara.id', 'tbl_moa.negara_id')
+        $sqlBuilder = Moa::select(['tbl_moa.id as no', 'tbl_moa.id', 'tbl_mou.nama_lembaga_mitra', 'kategori_moa', 'tb_prodi.nama_prodi', 'tingkat_moa', 'tanggal', 'lembaga_mitra', 'master_negara.nama_negara', 'master_provinsi.province_name', 'master_kota_kabupaten.kota_kabupaten_nama', 'master_kecamatan.kecamatan_nama', 'master_kelurahan.kelurahan_nama', 'tbl_moa.alamat', 'durasi', 'tanggal_akhir', 'dokumen1', 'dokumen2', 'dokumen3', 'tbl_moa.status'])
+            ->leftJoin('tbl_mou', 'tbl_mou.id', 'tbl_moa.mou_id')
+            ->leftJoin('tb_prodi', 'tb_prodi.kode_prodi', 'tbl_moa.kode_prodi')
+            ->leftJoin('master_negara', 'master_negara.id', 'tbl_moa.negara_id')
             ->leftJoin('master_provinsi', 'master_provinsi.master_provinsi_id', 'tbl_moa.provinsi_id')
             ->leftJoin('master_kota_kabupaten', 'master_kota_kabupaten.master_kota_kabupaten_id', 'tbl_moa.kota_kabupaten_id')
             ->leftJoin('master_kecamatan', 'master_kecamatan.master_kecamatan_id', 'tbl_moa.kecamata_id')
@@ -172,7 +173,7 @@ class MoaController extends Controller
             $dataInsert['kecamata_id'] = $request->kecamata_id;
             $dataInsert['kelurahan_id'] = $request->kelurahan_id;
         }
-
+        $dataInsert['mou_id'] = $request->mou_id;
         $dataInsert['kategori_moa'] = $request->kategori_moa;
         $dataInsert['tingkat_moa'] = $request->tingkat_moa;
         $dataInsert['tanggal'] = $request->tanggal;
@@ -181,6 +182,7 @@ class MoaController extends Controller
         $dataInsert['alamat'] = $request->alamat;
         $dataInsert['durasi'] = $request->durasi;
         $dataInsert['tanggal_akhir'] = date('Y-m-d', strtotime($request->tanggal . ' + ' . $request->durasi . ' years'));
+        $dataInsert['kode_prodi'] = $request->kode_prodi;
         $dataInsert['status'] = $request->status;
 
         $dataGet = Moa::create($dataInsert);
@@ -234,10 +236,12 @@ class MoaController extends Controller
         $data['kota_kabupaten_result'] = $oKotaKabupaten->getKotaKabupatenByProvinsi($moaRow->provinsi_id)->get();
         $data['kecamatan_result'] = $oKecamatan->getKecamatanByKabupaten($moaRow->kota_kabupaten_id)->get();
         $data['kelurahan_result'] = $oKelurahan->getkelurahanByKecamatan($moaRow->kecamata_id)->get();
+        $data['prodi_result'] = DB::table('tb_prodi')->get();
 
         $respon['status'] = true;
         $respon['token'] = csrf_token();
         $respon['view_modal_form'] = view('moa.form', $data)->render();
+        $respon['moa'] = $moaRow;
         return response()->json($respon);
     }
 
@@ -247,6 +251,7 @@ class MoaController extends Controller
         // if country id 102 is indonesia
         if ($request->negara_id == '102') {
             $validator = Validator::make($request->all(), [
+                'mou_id' => 'required',
                 'kategori_moa'     => 'required',
                 'tingkat_moa'     => 'required',
                 'tanggal'     => 'required',
@@ -258,6 +263,7 @@ class MoaController extends Controller
                 'kelurahan_id'   => 'required',
                 'alamat'   => 'required',
                 'durasi'   => 'required',
+                'kode_prodi' => 'required',
                 'status'   => 'required',
             ]);
         } else {
@@ -269,6 +275,7 @@ class MoaController extends Controller
                 'negara_id'   => 'required',
                 'alamat'   => 'required',
                 'durasi'   => 'required',
+                'kode_prodi' => 'required',
                 'status'   => 'required',
             ]);
         }
@@ -338,6 +345,7 @@ class MoaController extends Controller
         $dataUpdate['alamat'] = $request->alamat;
         $dataUpdate['durasi'] = $request->durasi;
         $dataUpdate['tanggal_akhir'] = date('Y-m-d', strtotime($request->tanggal . ' + ' . $request->durasi . ' years'));
+        $dataUpdate['kode_prodi'] = $request->kode_prodi;
         $dataUpdate['status'] = $request->status;
 
         $dataGet = Moa::where(['id' => $request->id])->update($dataUpdate);
@@ -473,22 +481,22 @@ class MoaController extends Controller
         $oKotaKabupaten = new KotaKabupaten();
         $oKecamatan = new Kecamatan();
         $oKelurahan = new Kelurahan();
-        $oMOU = new MOa();
+        $oMoa = new Moa();
 
-        $id = $request->mou_id;
-        $mouRow = $oMOU->getMouById($id)->first();
+        $id = $request->moa_id;
+        $moaRow = $oMoa->getMoaById($id)->first();
         // print_r($mouRow);
 
         $datetime = new \DateTime();
         $datetime->add(new DateInterval('P6M'));
 
-        $data['title'] = "Detail MOU - " . $mouRow->nama_lembaga_mitra;
-        $data['mouRow'] = $mouRow;
+        $data['title'] = "Detail MOU - " . $moaRow->nama_lembaga_mitra;
+        $data['moaRow'] = $moaRow;
         $data['tanggal_6_bulan'] = $datetime->format('Y-m-d');
 
         $respon['status'] = true;
         $respon['token'] = csrf_token();
-        $respon['view_modal_form'] = view('mou.detail', $data)->render();
+        $respon['view_modal_form'] = view('moa.detail', $data)->render();
         return response()->json($respon);
     }
 }

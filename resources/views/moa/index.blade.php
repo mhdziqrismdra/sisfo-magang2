@@ -46,6 +46,7 @@
                                         <th>Action</th>
                                         <th>MOU</th>
                                         <th>Kategori</th>
+                                        <th>Prodi</th>
                                         <th>Tingkat</th>
                                         <th>Tanggal</th>
                                         <th>Nama Lembaga</th>
@@ -217,10 +218,10 @@
                         }
                     }, {
                         data: "nama_lembaga_mitra",
-                        searchable: false,
                     }, {
                         data: "kategori_moa",
-                        searchable: false,
+                    }, {
+                        data: "nama_prodi",
                     }, {
                         data: "tingkat_moa",
                     }, {

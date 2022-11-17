@@ -140,14 +140,14 @@
                     <input type="file" class="form-control" id="dokumen3" name="dokumen3">
                 </div>
                 <div class="form-group">
-                    <label for="status">Tujuan Prodi</label>
+                    <label for="kode_prodi">Pilih Prodi</label>
                     <div class="form-check">
-                        @foreach ($prodi_result as $item)
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" value="">
-                            <span class="form-check-sign">{{$item->nama_prodi}}</span>
-                        </label>
-                        @endforeach
+                        <select class="form-control" id="kode_prodi" name="kode_prodi">
+                            <option value="">--Pilih Prodi--</option>
+                            @foreach ($prodi_result as $item)
+                                <option value="{{ $item->kode_prodi }}" {{ $kode_prodi == $item->kode_prodi ? 'selected' : '' }}>{{ $item->nama_prodi }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <div class="form-group">
