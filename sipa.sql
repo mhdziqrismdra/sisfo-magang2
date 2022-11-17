@@ -32,21 +32,23 @@ CREATE TABLE `tbl_moa` (
   `dokumen1` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `dokumen2` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `dokumen3` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_prodi` char(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_prodi` char(20) CHARACTER SET utf8mb4 DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  PRIMARY KEY (`id`),
+  KEY `mou_id` (`mou_id`),
+  CONSTRAINT `tbl_moa_ibfk_1` FOREIGN KEY (`mou_id`) REFERENCES `tbl_mou` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `tbl_moa` */
 
-insert  into `tbl_moa`(`id`,`mou_id`,`kategori_moa`,`tingkat_moa`,`tanggal`,`lembaga_mitra`,`negara_id`,`provinsi_id`,`kota_kabupaten_id`,`kecamata_id`,`kelurahan_id`,`alamat`,`durasi`,`tanggal_akhir`,`dokumen1`,`dokumen2`,`dokumen3`,`kode_prodi`,`status`,`created_at`,`updated_at`) values (1,1,'Pendidikan/Pengajaran','Wilayah','2022-11-15','Nama Lembaga Mitra',2,NULL,NULL,NULL,NULL,'Nama Lembaga MitraNama Lembaga Mitra',1,'2023-11-15',NULL,NULL,NULL,NULL,1,'2022-11-15 05:52:14','2022-11-16 05:10:52');
+insert  into `tbl_moa`(`id`,`mou_id`,`kategori_moa`,`tingkat_moa`,`tanggal`,`lembaga_mitra`,`negara_id`,`provinsi_id`,`kota_kabupaten_id`,`kecamata_id`,`kelurahan_id`,`alamat`,`durasi`,`tanggal_akhir`,`dokumen1`,`dokumen2`,`dokumen3`,`kode_prodi`,`status`,`created_at`,`updated_at`) values (1,1,'Pendidikan/Pengajaran','Wilayah','2022-11-15','Nama Lembaga Mitra',2,NULL,NULL,NULL,NULL,'Nama Lembaga MitraNama Lembaga Mitra',1,'2023-11-15',NULL,NULL,NULL,'2',1,'2022-11-15 05:52:14','2022-11-17 05:53:46'),(2,1,'Penelitian','Internasional','2022-11-17','Lembaga Mitra 11',18,NULL,NULL,NULL,NULL,'tttttttttttt',1,'2023-11-17',NULL,NULL,NULL,'4',1,'2022-11-17 05:28:55','2022-11-17 06:42:40'),(3,1,'Pendidikan/Pengajaran','Wilayah','2022-11-17','Tambah Kerja Sama',3,NULL,NULL,NULL,NULL,'yyyyyyyyyy',2,'2024-11-17',NULL,NULL,NULL,'3',1,'2022-11-17 05:31:37','2022-11-17 05:43:46');
 
 /*Table structure for table `tbl_mou` */
 
 CREATE TABLE `tbl_mou` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `periode` int(11) DEFAULT NULL,
   `tanggal_kerja_sama` date DEFAULT NULL,
   `nama_lembaga_mitra` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
