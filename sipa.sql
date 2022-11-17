@@ -14,6 +14,8 @@ MySQL - 10.4.12-MariaDB-log : Database - sisfo-bkn
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 /*Table structure for table `tbl_moa` */
 
+DROP TABLE IF EXISTS `tbl_moa`;
+
 CREATE TABLE `tbl_moa` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `mou_id` bigint(20) DEFAULT NULL,
@@ -46,6 +48,8 @@ CREATE TABLE `tbl_moa` (
 insert  into `tbl_moa`(`id`,`mou_id`,`kategori_moa`,`tingkat_moa`,`tanggal`,`lembaga_mitra`,`negara_id`,`provinsi_id`,`kota_kabupaten_id`,`kecamata_id`,`kelurahan_id`,`alamat`,`durasi`,`tanggal_akhir`,`dokumen1`,`dokumen2`,`dokumen3`,`kode_prodi`,`status`,`created_at`,`updated_at`) values (1,1,'Pendidikan/Pengajaran','Wilayah','2022-11-15','Nama Lembaga Mitra',2,NULL,NULL,NULL,NULL,'Nama Lembaga MitraNama Lembaga Mitra',1,'2023-11-15',NULL,NULL,NULL,'2',1,'2022-11-15 05:52:14','2022-11-17 05:53:46'),(2,1,'Penelitian','Internasional','2022-11-17','Lembaga Mitra 11',18,NULL,NULL,NULL,NULL,'tttttttttttt',1,'2023-11-17',NULL,NULL,NULL,'4',1,'2022-11-17 05:28:55','2022-11-17 06:42:40'),(3,1,'Pendidikan/Pengajaran','Wilayah','2022-11-17','Tambah Kerja Sama',3,NULL,NULL,NULL,NULL,'yyyyyyyyyy',2,'2024-11-17',NULL,NULL,NULL,'3',1,'2022-11-17 05:31:37','2022-11-17 05:43:46');
 
 /*Table structure for table `tbl_mou` */
+
+DROP TABLE IF EXISTS `tbl_mou`;
 
 CREATE TABLE `tbl_mou` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
